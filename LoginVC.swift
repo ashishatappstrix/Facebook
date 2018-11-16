@@ -25,6 +25,7 @@ class LoginVC: UIViewController {
     //MARK: View Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        //TODO: Cache constraints and load initial values in keyboard notification methods
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,12 +53,12 @@ class LoginVC: UIViewController {
     //Actions while showing keyboard
     @objc func keyboardWillShow(notification: Notification) {
         //Reduce size by 75px
+        //TODO: Convert to dynamic values
         coverImageTopConstraint.constant -= 75
         handsImageTopConstraint.constant -= 75
         whiteImageYConstraint.constant += 50
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            print("Begin: \(keyboardSize.height)")
             registerButtonBottomConstraint.constant += keyboardSize.height
         }
         UIView.animate(withDuration: 0.5) { [weak self] in
@@ -70,12 +71,12 @@ class LoginVC: UIViewController {
     //Actions while hiding keyboard
     @objc func keyboardWillHide(notification: Notification) {
         //Increase size by 75px
+        //TODO: Convert to dynamic values
         coverImageTopConstraint.constant += 75
         handsImageTopConstraint.constant += 75
         whiteImageYConstraint.constant -= 50
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            print("End: \(keyboardSize.height)")
             registerButtonBottomConstraint.constant -= keyboardSize.height
         }
         UIView.animate(withDuration: 0.5) { [weak self] in
