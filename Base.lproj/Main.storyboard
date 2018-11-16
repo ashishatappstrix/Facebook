@@ -53,7 +53,7 @@
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2aB-3C-TZr">
                                         <rect key="frame" x="8" y="56" width="327" height="30"/>
@@ -168,9 +168,14 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="coverImageTopConstraint" destination="0lt-BQ-ylZ" id="aoh-tJ-Xwp"/>
+                        <outlet property="handsImageTopConstraint" destination="awL-Ps-rdi" id="V6l-tb-raS"/>
+                        <outlet property="handsImageView" destination="18v-wd-lBM" id="5jD-ew-MHL"/>
                         <outlet property="loginButton" destination="bDf-SJ-ql6" id="bgo-Rz-cjd"/>
                         <outlet property="registerButton" destination="Ewr-nv-fu2" id="eWr-NG-mgt"/>
+                        <outlet property="registerButtonBottomConstraint" destination="wyG-9T-sOd" id="NDj-2z-oMP"/>
                         <outlet property="textFieldsView" destination="ay7-zr-p66" id="ubO-r5-cyM"/>
+                        <outlet property="whiteImageYConstraint" destination="dI9-wQ-IiD" id="bpt-ww-Qbj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
