@@ -77,7 +77,7 @@ class RegisterVC: UIViewController {
     
     func setEmailContinueButton() {
         emailOrLabelButton.setTitle("Continue", for: .normal)
-        emailOrLabelButton.backgroundColor = UIColor.blue
+        emailOrLabelButton.backgroundColor = UIColor.init(red: 66/255, green: 103/255, blue: 178/255, alpha: 1)
         emailOrLabelButton.setTitleColor(.white, for: .normal)
     }
     
