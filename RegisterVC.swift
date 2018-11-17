@@ -14,6 +14,9 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var contentSubviews_width: NSLayoutConstraint!
     
     @IBOutlet weak var scrollView: UIScrollView!
+    
+    var datePicker: UIDatePicker!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,8 +29,12 @@ class RegisterVC: UIViewController {
         emailOrMobileTextField.addTarget(self, action: #selector(RegisterVC.emailTextFieldDidChange(_:)),
                             for: UIControlEvents.editingChanged)
         
+         datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: -5, to: Date())
+        datePicker.addTarget(self, action: #selector(datePickerDidChanged(_:)), for: .valueChanged)
+        bdayTextField.inputView = datePicker
     }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         addButtonBorders(for: [maleImageButton, femaleImageButton])
@@ -91,6 +98,56 @@ class RegisterVC: UIViewController {
         }
     }
     
+   @objc func datePickerDidChanged(_ datePicker: UIDatePicker) {
+        let formatter = DateFormatter()
+        formatter.dateStyle = DateFormatter.Style.medium
+        bdayTextField.text = formatter.string(from: datePicker.date)
+    
+        let compareDateFormatter = DateFormatter()
+        compareDateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let compareDate = compareDateFormatter.date(from: "2013/01/01 00:01")
+    
+        if datePicker.date < compareDate! {
+            bdayContinueButton.isHidden = false
+        } else {
+            bdayContinueButton.isHidden = true
+        }
+    }
+    
+    @IBAction func textFieldDidChanged(_ textField: UITextField) {
+        
+            // declaring constant (shortcut) to the Helper Class
+            let helper = Helper()
+            
+            // logic for Email TextField
+            if textField == emailOrMobileTextField {
+                
+                // check email validation
+                if helper.isValid(email: emailOrMobileTextField.text!) {
+                    emailOrLabelButton.isHidden = false
+                }
+                
+                // logic for First Name or Last Name TextFields
+            } else if textField == firstNameTextField || textField == surNameTextField {
+                
+                // check fullname validation
+                if helper.isValid(name: firstNameTextField.text!) && helper.isValid(name: surNameTextField.text!) {
+                    nameContinueButton.isHidden = false
+                }
+                
+                // logic for Password TextField
+            } else if textField == passwordTextField {
+                
+                // check password validation
+                if passwordTextField.text!.count >= 6 {
+                    passwordContinueButton.isHidden = false
+                }
+            }
+            
+        
+        
+        
+    }
     //MARK: Get Started View - Outlets - Actions
     
     @IBOutlet weak var getStartedButton: UIButton!
@@ -114,6 +171,7 @@ class RegisterVC: UIViewController {
     //MARK: Bday View - Outlets - Actions
     
     @IBOutlet weak var bdayContinueButton: UIButton!
+    @IBOutlet weak var bdayTextField: UITextField!
     
     @IBAction func bdayContinueButton_Tapped(_ sender: Any) {
         let position = CGPoint(x:self.view.frame.width * 3, y:0)
@@ -150,13 +208,23 @@ class RegisterVC: UIViewController {
 
     
     @IBAction func emailOrLabelButtonTapped(_ sender: Any) {
-        let position = CGPoint(x:self.view.frame.width * 6, y:0)
+        let helper = Helper()
+        if helper.isValid(name: emailOrMobileTextField.text!) {
+            
+        }
+        let position = CGPoint(x:self.view.frame.width * 5, y:0)
         scrollView.setContentOffset(position, animated: true)
         
     }
     //MARK: Password View - Outlets - Actions
     
+    @IBOutlet weak var passwordContinueButton: UIButton!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBAction func passwordContinueButtonTapped(_ sender: Any) {
+        let position = CGPoint(x:self.view.frame.width * 6, y:0)
+        scrollView.setContentOffset(position, animated: true)
+    }
+    
     
     //MARK: Password View - Outlets - Actions
     

@@ -254,7 +254,7 @@
                                                         <color key="textColor" red="0.25926578039999998" green="0.40468230840000002" blue="0.69936054940000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zTf-ae-d3a">
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zTf-ae-d3a">
                                                         <rect key="frame" x="20" y="231" width="335" height="40"/>
                                                         <color key="backgroundColor" red="0.25926578039999998" green="0.40468230840000002" blue="0.69936054940000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -273,12 +273,18 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                        <connections>
+                                                            <action selector="textFieldDidChanged:" destination="3lp-gw-XMo" eventType="editingChanged" id="reH-TJ-e6h"/>
+                                                        </connections>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Surname" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="7Ox-f9-5o1" userLabel="Surname">
                                                         <rect key="frame" x="197.5" y="186" width="157.5" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                        <connections>
+                                                            <action selector="textFieldDidChanged:" destination="3lp-gw-XMo" eventType="editingChanged" id="Q2E-PI-Yfh"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.90924471620000002" green="0.92538994549999998" blue="0.93780279160000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -315,7 +321,7 @@
                                                             <constraint firstAttribute="height" constant="40" id="w7z-SU-ONF"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                                        <state key="normal" title="Get Started">
+                                                        <state key="normal" title="Continue">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
@@ -419,8 +425,11 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
+                                                        <connections>
+                                                            <action selector="textFieldDidChanged:" destination="3lp-gw-XMo" eventType="editingChanged" id="4Fq-H4-4Ds"/>
+                                                        </connections>
                                                     </textField>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IPy-eh-k7N" userLabel="emailLabelOrButton">
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IPy-eh-k7N" userLabel="emailLabelOrButton">
                                                         <rect key="frame" x="20" y="226" width="335" height="30"/>
                                                         <state key="normal" title="Button"/>
                                                         <connections>
@@ -464,7 +473,21 @@
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
+                                                        <connections>
+                                                            <action selector="textFieldDidChanged:" destination="3lp-gw-XMo" eventType="editingChanged" id="7Oj-qT-7oj"/>
+                                                        </connections>
                                                     </textField>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HLz-Zf-mWm" userLabel="Password Continue">
+                                                        <rect key="frame" x="20" y="290.5" width="335" height="33"/>
+                                                        <color key="backgroundColor" red="0.25926578039999998" green="0.40468230840000002" blue="0.69936054940000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                                        <state key="normal" title="Continue">
+                                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="passwordContinueButtonTapped:" destination="3lp-gw-XMo" eventType="touchUpInside" id="fLd-xa-0lx"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.90924471620000002" green="0.92538994549999998" blue="0.93780279160000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -474,7 +497,10 @@
                                                     <constraint firstItem="w0L-4F-JrB" firstAttribute="top" secondItem="lIm-1o-hi6" secondAttribute="bottom" constant="34" id="CQe-vh-Mhs"/>
                                                     <constraint firstItem="lIm-1o-hi6" firstAttribute="leading" secondItem="uk5-2O-ZcS" secondAttribute="leading" constant="20" id="GOi-4v-YDz"/>
                                                     <constraint firstItem="w0L-4F-JrB" firstAttribute="leading" secondItem="lIm-1o-hi6" secondAttribute="leading" id="L9G-uL-Oqe"/>
+                                                    <constraint firstItem="HLz-Zf-mWm" firstAttribute="trailing" secondItem="w0L-4F-JrB" secondAttribute="trailing" id="Pbd-ub-geD"/>
+                                                    <constraint firstItem="HLz-Zf-mWm" firstAttribute="leading" secondItem="w0L-4F-JrB" secondAttribute="leading" id="WwH-Jl-18i"/>
                                                     <constraint firstItem="SOC-qR-1M8" firstAttribute="leading" secondItem="w0L-4F-JrB" secondAttribute="leading" id="cky-T5-YMo"/>
+                                                    <constraint firstItem="HLz-Zf-mWm" firstAttribute="top" secondItem="SOC-qR-1M8" secondAttribute="bottom" constant="20" id="faH-MM-on3"/>
                                                     <constraint firstItem="SOC-qR-1M8" firstAttribute="trailing" secondItem="w0L-4F-JrB" secondAttribute="trailing" id="qfF-50-hMQ"/>
                                                     <constraint firstAttribute="trailing" secondItem="lIm-1o-hi6" secondAttribute="trailing" constant="20" id="wv3-bS-i6y"/>
                                                 </constraints>
@@ -617,6 +643,7 @@
                     <size key="freeformSize" width="2625" height="667"/>
                     <connections>
                         <outlet property="bdayContinueButton" destination="aj0-68-uYI" id="feR-Nz-wlI"/>
+                        <outlet property="bdayTextField" destination="iU1-HE-QXq" id="jiI-Sf-uYG"/>
                         <outlet property="contentSubviews_width" destination="rUj-A4-Bly" id="bjA-9f-o0L"/>
                         <outlet property="contentView_width" destination="ndS-GQ-175" id="8Tv-hr-6s3"/>
                         <outlet property="emailAddressButton" destination="cJz-WD-cD0" id="zj1-3L-1gt"/>
@@ -628,6 +655,7 @@
                         <outlet property="getStartedButton" destination="gF0-pg-kuZ" id="M63-rQ-W3P"/>
                         <outlet property="maleImageButton" destination="Rh5-ts-FTX" id="vup-mc-SzC"/>
                         <outlet property="nameContinueButton" destination="zTf-ae-d3a" id="Cnn-cR-a79"/>
+                        <outlet property="passwordContinueButton" destination="HLz-Zf-mWm" id="4If-6J-7ka"/>
                         <outlet property="passwordTextField" destination="w0L-4F-JrB" id="tPl-YY-7F1"/>
                         <outlet property="scrollView" destination="e7e-id-YZi" id="bXP-U5-CE1"/>
                         <outlet property="signupButton" destination="Mat-a4-mXL" id="W11-QH-oNZ"/>
