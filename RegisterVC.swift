@@ -13,6 +13,7 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var contentView_width: NSLayoutConstraint!
     @IBOutlet weak var contentSubviews_width: NSLayoutConstraint!
     
+    @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -95,7 +96,8 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var getStartedButton: UIButton!
     
     @IBAction func getStartedButton_tapped(_ sender: Any) {
-        
+        let position = CGPoint(x:self.view.frame.width, y:0)
+        scrollView.setContentOffset(position, animated: true)
     }
     
     //MARK: Name View - Outlets - Actions
@@ -105,7 +107,8 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var nameContinueButton: UIButton!
     
     @IBAction func nameContinueButton_tapped(_ sender: Any) {
-        
+        let position = CGPoint(x:self.view.frame.width * 2, y:0)
+        scrollView.setContentOffset(position, animated: true)
     }
     
     //MARK: Bday View - Outlets - Actions
@@ -113,6 +116,8 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var bdayContinueButton: UIButton!
     
     @IBAction func bdayContinueButton_Tapped(_ sender: Any) {
+        let position = CGPoint(x:self.view.frame.width * 3, y:0)
+        scrollView.setContentOffset(position, animated: true)
     }
     
     //MARK: Gender View - Outlets - Actions
@@ -121,9 +126,13 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var maleImageButton: UIButton!
     
     @IBAction func maleImageButtonTapped(_ sender: Any) {
+        let position = CGPoint(x:self.view.frame.width * 4, y:0)
+        scrollView.setContentOffset(position, animated: true)
     }
     
     @IBAction func femaleImageButtonTapped(_ sender: Any) {
+        let position = CGPoint(x:self.view.frame.width * 4, y:0)
+        scrollView.setContentOffset(position, animated: true)
     }
     
     //MARK: Mobile/Email Number View - Outlets - Actions
@@ -141,7 +150,8 @@ class RegisterVC: UIViewController {
 
     
     @IBAction func emailOrLabelButtonTapped(_ sender: Any) {
-        
+        let position = CGPoint(x:self.view.frame.width * 6, y:0)
+        scrollView.setContentOffset(position, animated: true)
         
     }
     //MARK: Password View - Outlets - Actions
@@ -153,7 +163,7 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var signupButton: UIButton!
     
     @IBAction func signupButtonTapped(_ sender: Any) {
-        
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

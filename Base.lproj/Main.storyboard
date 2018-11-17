@@ -195,7 +195,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="2625" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e7e-id-YZi">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e7e-id-YZi">
                                 <rect key="frame" x="0.0" y="20" width="2625" height="647"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h84-Cf-TZt" userLabel="Content View">
@@ -629,6 +629,7 @@
                         <outlet property="maleImageButton" destination="Rh5-ts-FTX" id="vup-mc-SzC"/>
                         <outlet property="nameContinueButton" destination="zTf-ae-d3a" id="Cnn-cR-a79"/>
                         <outlet property="passwordTextField" destination="w0L-4F-JrB" id="tPl-YY-7F1"/>
+                        <outlet property="scrollView" destination="e7e-id-YZi" id="bXP-U5-CE1"/>
                         <outlet property="signupButton" destination="Mat-a4-mXL" id="W11-QH-oNZ"/>
                         <outlet property="surNameTextField" destination="7Ox-f9-5o1" id="Irk-aA-M5m"/>
                     </connections>
