@@ -231,7 +231,8 @@ class RegisterVC: UIViewController {
     
     @IBAction func signupButtonTapped(_ sender: Any) {
         // STEP 1. Declaring URL of the request; declaring the body to the URL; declaring request with the safest method - POST, that no one can grab our info.
-        let url = URL(string: "http://localhost/fb/register.php")!
+        let urlString = "http://\(localhost)/fb/register.php"
+        let url = URL(string: urlString)!
         let body = "email=\(emailOrMobileTextField.text!.lowercased())&firstName=\(firstNameTextField.text!.lowercased())&lastName=\(surNameTextField.text!.lowercased())&password=\(passwordTextField.text!.lowercased())&birthday=\(bdayTextField.text!.lowercased())&gender=\(selectedGender)"
         var request = URLRequest(url: url)
         request.httpBody = body.data(using: .utf8)

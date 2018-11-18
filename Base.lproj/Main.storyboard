@@ -309,7 +309,7 @@
                                 <rect key="frame" x="0.0" y="427" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pbh-Ft-0Bk" id="FDY-sg-QMh">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -320,16 +320,20 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Item" id="HVS-qf-7kE"/>
+                    <connections>
+                        <outlet property="coverImageView" destination="Pt7-vi-p9W" id="ftP-Kv-7oM"/>
+                        <outlet property="userImageView" destination="Gak-oO-3Im" id="VY6-gN-wfA"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YiE-Ns-cyR" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="Hm4-LZ-bS3">
                     <connections>
-                        <action selector="coverImageVIew_tapped:" destination="9kW-G9-tXA" id="DCj-rD-wHA"/>
+                        <action selector="coverImageView_tapped:" destination="9kW-G9-tXA" id="uAd-2Q-FMP"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="fYi-VA-ZK5">
                     <connections>
-                        <action selector="userImageView_tapped:" destination="9kW-G9-tXA" id="MFO-Ce-6T5"/>
+                        <action selector="userImageView_tapped:" destination="9kW-G9-tXA" id="mcF-qt-A2d"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
