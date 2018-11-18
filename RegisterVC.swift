@@ -11,6 +11,7 @@ import UIKit
 class RegisterVC: UIViewController {
 
     @IBOutlet weak var contentView_width: NSLayoutConstraint!
+    @IBOutlet weak var contentView_height: NSLayoutConstraint!
     @IBOutlet weak var contentSubviews_width: NSLayoutConstraint!
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -21,6 +22,7 @@ class RegisterVC: UIViewController {
         super.viewDidLoad()
 
         contentView_width.constant = self.view.frame.width * 7
+        contentView_height.constant = self.view.frame.height
         contentSubviews_width.constant = self.view.frame.width
         setFieldsCornerRadius()
         

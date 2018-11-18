@@ -172,32 +172,65 @@ class LoginVC: UIViewController {
         // STEP 2. Execute created above request
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             
-            // accessing Helper Class to access its functions
-            let helper = Helper()
-            
-            // if error occures
-            if error != nil {
-                helper.showAlert(title: "Server Error", message: error!.localizedDescription, in: self)
-                return
-            }
-            
-            // STEP 3. Receive JSON message
-            do {
+            DispatchQueue.main.async {
                 
-                // save mode of casting any data
-                guard let data = data else {
-                    helper.showAlert(title: "Data Error", message: error!.localizedDescription, in: self)
+                // accessing Helper Class to access its functions
+                let helper = Helper()
+                
+                // if error occures
+                if error != nil {
+                    helper.showAlert(title: "Server Error", message: error!.localizedDescription, in: self)
                     return
                 }
                 
-                // fetching all JSON info received from the server
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
+                // STEP 3. Receive JSON message
+                do {
+                    
+                    // save mode of casting any data
+                    guard let data = data else {
+                        helper.showAlert(title: "Data Error", message: error!.localizedDescription, in: self)
+                        return
+                    }
+                    
+                    // fetching all JSON info received from the server
+                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
+                    
+                    // save mode of casting JSON
+                    guard let parsedJSON = json else {
+                        print("Parsing Error")
+                        return
+                    }
+                    
+                    // STEP 4. Create Scenarios
+                    // Successfully Logged In
+                    if parsedJSON["status"] as! String == "200" {
+                        
+                        // go to TabBar
+                        helper.instantiateViewController(identifier: "TabBar", animated: true, by: self, completion: nil)
+                        
+                        // saving logged user
+                        currentUser = parsedJSON.mutableCopy() as? NSMutableDictionary
+                        UserDefaults.standard.set(currentUser, forKey: "currentUser")
+                        UserDefaults.standard.synchronize()
+                        
+                        // Some error occured related to the entered data, like: wrong password, wrong email, etc
+                    } else {
+                        
+                        // save mode of casting / checking existance of Server Message
+                        if parsedJSON["message"] != nil {
+                            let message = parsedJSON["message"] as! String
+                            helper.showAlert(title: "Error", message: message, in: self)
+                        }
+                        
+                    }
+                    
+                    print(parsedJSON)
+                    
+                    // error while fetching JSON
+                } catch {
+                    helper.showAlert(title: "JSON Error", message: error.localizedDescription, in: self)
+                }
                 
-                print(json)
-                
-                // error while fetching JSON
-            } catch {
-                helper.showAlert(title: "JSON Error", message: error.localizedDescription, in: self)
             }
             
             }.resume()
