@@ -15,6 +15,8 @@ class LoginVC: UIViewController {
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var textFieldsView: UIView!
+    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
     
     //Constraints
     @IBOutlet weak var coverImageTopConstraint: NSLayoutConstraint!
@@ -123,7 +125,6 @@ class LoginVC: UIViewController {
     func configureLoginButton() {
         loginButton.layer.cornerRadius = 5
         loginButton.layer.masksToBounds = true
-        loginButton.isEnabled = false
     }
     
     //Configure Register Button
@@ -136,5 +137,70 @@ class LoginVC: UIViewController {
         
         registerButton.layer.cornerRadius = 5
         registerButton.layer.masksToBounds = true
+    }
+    
+    
+    @IBAction func loginButton_Tapped(_ sender: Any) {
+        // accessing Helper Class that stores multi-used functions
+        let helper = Helper()
+        
+        // 1st Varification: if etnered text in EmailTextField doesn't match our expression/rule, show alert
+        if helper.isValid(email: emailTextField.text!) == false {
+            helper.showAlert(title: "Invalid Email", message: "Please enter registered Email address", in: self)
+            return
+            
+            // 2nd Varification: if password is less than 6 chars, then return do not executed further
+        } else if passwordTextField.text!.count < 6 {
+            helper.showAlert(title: "Invalid Password", message: "Password must contain at least 6 characters", in: self)
+            return
+        }
+        
+        // run LoginRequest Function
+        loginRequest()
+    }
+    
+    // sending request to the server for proceeding Log In
+    func loginRequest() {
+        
+        // STEP 1. Declaring URL to be sent request to; declaring the body to be appended to URL (all this managed via request); declaring request to be executed
+        let url = URL(string: "http://localhost/fb/login.php")!
+        let body = "email=\(emailTextField.text!)&password=\(passwordTextField.text!)"
+        var request = URLRequest(url: url)
+        request.httpBody = body.data(using: .utf8)
+        request.httpMethod = "POST"
+        
+        // STEP 2. Execute created above request
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
+            // accessing Helper Class to access its functions
+            let helper = Helper()
+            
+            // if error occures
+            if error != nil {
+                helper.showAlert(title: "Server Error", message: error!.localizedDescription, in: self)
+                return
+            }
+            
+            // STEP 3. Receive JSON message
+            do {
+                
+                // save mode of casting any data
+                guard let data = data else {
+                    helper.showAlert(title: "Data Error", message: error!.localizedDescription, in: self)
+                    return
+                }
+                
+                // fetching all JSON info received from the server
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
+                
+                print(json)
+                
+                // error while fetching JSON
+            } catch {
+                helper.showAlert(title: "JSON Error", message: error.localizedDescription, in: self)
+            }
+            
+            }.resume()
+        
     }
 }

@@ -88,6 +88,9 @@
                                 <state key="normal" title="Login">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="loginButton_Tapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FYp-cP-vm3"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ewr-nv-fu2">
                                 <rect key="frame" x="16" y="607" width="343" height="40"/>
@@ -174,9 +177,11 @@
                     </view>
                     <connections>
                         <outlet property="coverImageTopConstraint" destination="0lt-BQ-ylZ" id="aoh-tJ-Xwp"/>
+                        <outlet property="emailTextField" destination="NDF-hd-NSK" id="Olg-hj-u4a"/>
                         <outlet property="handsImageTopConstraint" destination="awL-Ps-rdi" id="V6l-tb-raS"/>
                         <outlet property="handsImageView" destination="18v-wd-lBM" id="5jD-ew-MHL"/>
                         <outlet property="loginButton" destination="bDf-SJ-ql6" id="bgo-Rz-cjd"/>
+                        <outlet property="passwordTextField" destination="2aB-3C-TZr" id="A6r-6w-wn5"/>
                         <outlet property="registerButton" destination="Ewr-nv-fu2" id="eWr-NG-mgt"/>
                         <outlet property="registerButtonBottomConstraint" destination="wyG-9T-sOd" id="NDj-2z-oMP"/>
                         <outlet property="textFieldsView" destination="ay7-zr-p66" id="ubO-r5-cyM"/>
