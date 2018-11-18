@@ -366,14 +366,14 @@
                                                         </constraints>
                                                         <state key="normal" backgroundImage="Female"/>
                                                         <connections>
-                                                            <action selector="femaleImageButtonTapped:" destination="3lp-gw-XMo" eventType="touchUpInside" id="anJ-oe-dSJ"/>
+                                                            <action selector="genderButtonTapped:" destination="3lp-gw-XMo" eventType="touchUpInside" id="8rD-vf-FAx"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rh5-ts-FTX" userLabel="Male Button">
+                                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rh5-ts-FTX" userLabel="Male Button">
                                                         <rect key="frame" x="205" y="176.5" width="120" height="120"/>
                                                         <state key="normal" backgroundImage="Male"/>
                                                         <connections>
-                                                            <action selector="maleImageButtonTapped:" destination="3lp-gw-XMo" eventType="touchUpInside" id="o3e-gp-7AS"/>
+                                                            <action selector="genderButtonTapped:" destination="3lp-gw-XMo" eventType="touchUpInside" id="QQs-qk-CrQ"/>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We'll help you create an account in a few easy steps" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YWP-JK-Q54">

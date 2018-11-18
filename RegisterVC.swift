@@ -182,16 +182,13 @@ class RegisterVC: UIViewController {
     
     @IBOutlet weak var femaleImageButton: UIButton!
     @IBOutlet weak var maleImageButton: UIButton!
-    
-    @IBAction func maleImageButtonTapped(_ sender: Any) {
+    var selectedGender = 0
+    @IBAction func genderButtonTapped(_ sender: UIButton) {
+        selectedGender = sender.tag
         let position = CGPoint(x:self.view.frame.width * 4, y:0)
         scrollView.setContentOffset(position, animated: true)
     }
     
-    @IBAction func femaleImageButtonTapped(_ sender: Any) {
-        let position = CGPoint(x:self.view.frame.width * 4, y:0)
-        scrollView.setContentOffset(position, animated: true)
-    }
     
     //MARK: Mobile/Email Number View - Outlets - Actions
     
@@ -231,6 +228,47 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var signupButton: UIButton!
     
     @IBAction func signupButtonTapped(_ sender: Any) {
+        // STEP 1. Declaring URL of the request; declaring the body to the URL; declaring request with the safest method - POST, that no one can grab our info.
+        let url = URL(string: "http://localhost/fb/register.php")!
+        let body = "email=\(emailOrMobileTextField.text!.lowercased())&firstName=\(firstNameTextField.text!.lowercased())&lastName=\(surNameTextField.text!.lowercased())&password=\(passwordTextField.text!.lowercased())&birthday=\(bdayTextField.text!.lowercased())&gender=\(selectedGender)"
+        var request = URLRequest(url: url)
+        request.httpBody = body.data(using: .utf8)
+        request.httpMethod = "POST"
+        print(url)
+        // STEP 2. Execute created above request
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
+            // access helper class
+            let helper = Helper()
+            
+            // error
+            if error != nil {
+                helper.showAlert(title: "Server Error", message: error!.localizedDescription, from: self)
+                return
+            }
+            
+            // fetch JSON if no error
+            do {
+                
+                // save mode of casting data
+                guard let data = data else {
+                    helper.showAlert(title: "Data Error", message: error!.localizedDescription, from: self)
+                    return
+                }
+                
+                // fetching all JSON received from the server
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
+                
+                print(json)
+                
+                // error while fetching JSON
+            } catch {
+                helper.showAlert(title: "JSON Error", message: error.localizedDescription, from: self)
+            }
+            
+            
+            }.resume()
+
         self.dismiss(animated: true, completion: nil)
     }
 }
