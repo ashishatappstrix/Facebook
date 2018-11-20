@@ -238,7 +238,19 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var signupButton: UIButton!
     
     @IBAction func signupButtonTapped(_ sender: Any) {
-        let registrationData = RegistrationRequiredInfo(email: emailOrMobileTextField.text!.lowercased(), firstName: firstNameTextField.text!.lowercased(), lastName: surNameTextField.text!.lowercased(), password: passwordTextField.text!.lowercased(), birthDay: bdayTextField.text!.lowercased(), gender: selectedGender)
+        
+        var userBdayEntered: String!
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MMM dd,yyyy"
+        
+        
+        if let date = dateFormatterGet.date(from: bdayTextField.text!) {
+            userBdayEntered = date.toString(dateFormat: "dd-MM-yyyy")
+        } else {
+            print("There was an error decoding the string")
+        }
+        
+        let registrationData = RegistrationRequiredInfo(email: emailOrMobileTextField.text!.lowercased(), firstName: firstNameTextField.text!.lowercased(), lastName: surNameTextField.text!.lowercased(), password: passwordTextField.text!.lowercased(), birthDay: userBdayEntered, gender: selectedGender)
         accountsAPIInterator.getRegistrationStatus(with: registrationData) { (response) in
             if response.statusCode == "200" {
                 DispatchQueue.main.async {

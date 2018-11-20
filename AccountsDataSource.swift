@@ -24,6 +24,18 @@ struct LoginResponse {
         if let statusCode = data["status"] as? String, let message = data["message"] as? String {
             self.statusCode = statusCode
             self.message = message
+            let helper = Helper()
+            helper.setCustomerProfile(with: data)
+            if let firstName = data["firstName"] as? String, let lastName = data["lastName"] as? String, let birthDay = data["birthday"] as? String, let gender =  data["gender"] as? String, let email = data["email"] as? String {
+                
+                CustomerProfile.shared.userFirstName = firstName
+                CustomerProfile.shared.userLastName = lastName
+                CustomerProfile.shared.userBirthday = birthDay
+                CustomerProfile.shared.userGender = gender
+                CustomerProfile.shared.userEmail = email
+                print("Module Manager: \(CustomerProfile.shared.userEmail)")
+                
+            }
         } else {
             self.statusCode = "400"
             self.message = "Invalid Data. Backend Error"

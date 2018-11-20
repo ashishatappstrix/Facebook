@@ -71,7 +71,7 @@ class APIRequestHandler {
             guard let requestData  = data as? RegistrationRequiredInfo else { return nil }
             let urlString = "http://\(localhost)/fb/register.php"
             let url = URL(string:urlString)!
-            let body = "email=\(requestData.email)&firstName=\(requestData.firstName)&lastName=\(requestData.lastName)&password=\(requestData.password)&birthday=\(requestData.birthDay)&gender=\(requestData.gender)"
+            let body = "email=\(requestData.email)&firstName=\(requestData.firstName.trimmingCharacters(in: .whitespaces))&lastName=\(requestData.lastName.trimmingCharacters(in: .whitespaces))&password=\(requestData.password)&birthday=\(requestData.birthDay.trimmingCharacters(in: .whitespaces))&gender=\(requestData.gender)"
             var request = URLRequest(url: url)
             request.httpBody = body.data(using: .utf8)
             request.httpMethod = MethodType.POST.rawValue

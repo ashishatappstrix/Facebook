@@ -168,6 +168,7 @@ class LoginVC: UIViewController {
             if response.statusCode == "200" {
                 DispatchQueue.main.async {
                     let helper = Helper()
+                    print("Module Manager: \(CustomerProfile.shared.userEmail)")
                     helper.instantiateViewController(identifier: "TabBar", animated: true, by: self, completion: nil)
                 }
             }

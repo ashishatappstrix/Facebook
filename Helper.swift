@@ -83,5 +83,50 @@ class Helper {
         
         return body
     }
+    
+    func setCustomerProfile(with data: Dictionary<String, Any>) {
+        if let firstName = data["firstName"] as? String, let lastName = data["lastName"] as? String, let birthDay = data["birthday"] as? String, let gender =  data["gender"] as? String, let email = data["email"] as? String {
+            CustomerProfile.shared.userFirstName = firstName
+            CustomerProfile.shared.userLastName = lastName
+            CustomerProfile.shared.userBirthday = birthDay
+            CustomerProfile.shared.userGender = gender
+            CustomerProfile.shared.userEmail = email
+        }
+    }
+    
+    /**
+     This method is used to get Device IP Address
+     */
+  func getDeviceIPAddress() -> String? {
+        var address: String?
+        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
+        if getifaddrs(&ifaddr) == 0 {
+            var ptr = ifaddr
+            while ptr != nil {
+                defer { ptr = ptr?.pointee.ifa_next }
+                let interface = ptr?.pointee
+                let addrFamily = interface?.ifa_addr.pointee.sa_family
+                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6), let name: String = String(cString: (interface?.ifa_name)!), name == "en0" || name == "pdp_ip0" {
+                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                    getnameinfo(interface?.ifa_addr, socklen_t((interface?.ifa_addr.pointee.sa_len)!), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
+                    address = String(cString: hostname)
+                }
+            }
+            freeifaddrs(ifaddr)
+        }
+        return address
+    }
 
 }
+
+extension Date
+{
+    func toString(dateFormat format: String ) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+    
+}
+
