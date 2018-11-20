@@ -22,32 +22,38 @@ class RegisterVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        contentView_width.constant = self.view.frame.width * 7
-        contentView_height.constant = self.view.frame.height
-        contentSubviews_width.constant = self.view.frame.width
-        setFieldsCornerRadius()
-        
         //Set Delegates
-        
         emailOrMobileTextField.addTarget(self, action: #selector(RegisterVC.emailTextFieldDidChange(_:)),
                                          for: UIControlEvents.editingChanged)
-        
+        //Set content view width and height
+        setContentLayout()
+        //Init datepicker for Birthday field
+        setDatePicker()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        addButtonBorders(for: [maleImageButton, femaleImageButton])
+    }
+    
+    @IBAction func alreadyHaveAccountTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func setDatePicker() {
         datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: -5, to: Date())
         datePicker.addTarget(self, action: #selector(datePickerDidChanged(_:)), for: .valueChanged)
         bdayTextField.inputView = datePicker
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        addButtonBorders(for: [maleImageButton, femaleImageButton])
+    
+    func setContentLayout() {
+        contentView_width.constant = self.view.frame.width * 7
+        contentView_height.constant = self.view.frame.height
+        contentSubviews_width.constant = self.view.frame.width
+        setFieldsCornerRadius()
     }
-    
-    
-    @IBAction func alreadyHaveAccountTapped(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     func setFieldsCornerRadius() {
         setCornerRadius(for: getStartedButton)
         setCornerRadius(for: firstNameTextField)
