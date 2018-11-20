@@ -10,8 +10,9 @@ import Foundation
 
 class AccountsAPIInteractor {
     
-    typealias LoginInfo = LoginRequiredInfo
-    typealias LoginCompletionHandler = (LoginResponse) -> ()
+     typealias LoginInfo = LoginRequiredInfo
+     typealias LoginCompletionHandler = (LoginResponse) -> ()
+     typealias RegistrationCompletionHandler = (RegistrationResponse) -> ()
     
     func getLoginStatus(with info: LoginRequiredInfo, response: @escaping(LoginCompletionHandler)) {
         APIRequestHandler().trigger(APIfor: .login, data: info) { (receivedResponse, error) in
@@ -24,4 +25,17 @@ class AccountsAPIInteractor {
         }
     }
   }
+    
+    func getRegistrationStatus(with info: RegistrationRequiredInfo, response: @escaping(RegistrationCompletionHandler)) {
+        APIRequestHandler().trigger(APIfor: .register, data: info) { (receivedResponse, error) in
+            if error == nil {
+                print(receivedResponse)
+                if let apiResponse = receivedResponse as? Dictionary<String, Any> {
+                    let reqData = RegistrationResponse(data: apiResponse)
+                    response(reqData)
+                }
+                print(response)
+            }
+        }
+    }
 }

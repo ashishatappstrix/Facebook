@@ -27,6 +27,11 @@ class APIRequestHandler {
             print (urlRequest)
             self.triggerAPI(with: urlRequest, apiResponse: completion)
         }
+        if (APIfor == .register && (data as? RegistrationRequiredInfo != nil)) {
+            guard let urlRequest = self.buildURLRequest(for: .register, with: data) else { return }
+            print (urlRequest)
+            self.triggerAPI(with: urlRequest, apiResponse: completion)
+        }
     }
     
     func triggerAPI(with request: URLRequest, apiResponse success: @escaping Response) {
@@ -60,14 +65,13 @@ class APIRequestHandler {
             var request = URLRequest(url: url)
             request.httpBody = body.data(using: .utf8)
             request.httpMethod = MethodType.POST.rawValue
-            
             return request
             
         case .register:
-            guard let requestData  = data as? LoginRequiredInfo else { return nil }
-            let urlString = "http://\(localhost)/fb/login.php"
+            guard let requestData  = data as? RegistrationRequiredInfo else { return nil }
+            let urlString = "http://\(localhost)/fb/register.php"
             let url = URL(string:urlString)!
-            let body = "email=\(requestData.userName)&password=\(requestData.password)"
+            let body = "email=\(requestData.email)&firstName=\(requestData.firstName)&lastName=\(requestData.lastName)&password=\(requestData.password)&birthday=\(requestData.birthDay)&gender=\(requestData.gender)"
             var request = URLRequest(url: url)
             request.httpBody = body.data(using: .utf8)
             request.httpMethod = MethodType.POST.rawValue

@@ -9,29 +9,30 @@
 import UIKit
 
 class RegisterVC: UIViewController {
-
+    
     @IBOutlet weak var contentView_width: NSLayoutConstraint!
     @IBOutlet weak var contentView_height: NSLayoutConstraint!
     @IBOutlet weak var contentSubviews_width: NSLayoutConstraint!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
+    let accountsAPIInterator = AccountsAPIInteractor()
     var datePicker: UIDatePicker!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         contentView_width.constant = self.view.frame.width * 7
         contentView_height.constant = self.view.frame.height
         contentSubviews_width.constant = self.view.frame.width
         setFieldsCornerRadius()
         
         //Set Delegates
-    
-        emailOrMobileTextField.addTarget(self, action: #selector(RegisterVC.emailTextFieldDidChange(_:)),
-                            for: UIControlEvents.editingChanged)
         
-         datePicker = UIDatePicker()
+        emailOrMobileTextField.addTarget(self, action: #selector(RegisterVC.emailTextFieldDidChange(_:)),
+                                         for: UIControlEvents.editingChanged)
+        
+        datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: -5, to: Date())
         datePicker.addTarget(self, action: #selector(datePickerDidChanged(_:)), for: .valueChanged)
@@ -42,7 +43,7 @@ class RegisterVC: UIViewController {
         addButtonBorders(for: [maleImageButton, femaleImageButton])
     }
     
-
+    
     @IBAction func alreadyHaveAccountTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -100,15 +101,15 @@ class RegisterVC: UIViewController {
         }
     }
     
-   @objc func datePickerDidChanged(_ datePicker: UIDatePicker) {
+    @objc func datePickerDidChanged(_ datePicker: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateStyle = DateFormatter.Style.medium
         bdayTextField.text = formatter.string(from: datePicker.date)
-    
+        
         let compareDateFormatter = DateFormatter()
         compareDateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
         let compareDate = compareDateFormatter.date(from: "2013/01/01 00:01")
-    
+        
         if datePicker.date < compareDate! {
             bdayContinueButton.isHidden = false
         } else {
@@ -118,34 +119,34 @@ class RegisterVC: UIViewController {
     
     @IBAction func textFieldDidChanged(_ textField: UITextField) {
         
-            // declaring constant (shortcut) to the Helper Class
-            let helper = Helper()
+        // declaring constant (shortcut) to the Helper Class
+        let helper = Helper()
+        
+        // logic for Email TextField
+        if textField == emailOrMobileTextField {
             
-            // logic for Email TextField
-            if textField == emailOrMobileTextField {
-                
-                // check email validation
-                if helper.isValid(email: emailOrMobileTextField.text!) {
-                    emailOrLabelButton.isHidden = false
-                }
-                
-                // logic for First Name or Last Name TextFields
-            } else if textField == firstNameTextField || textField == surNameTextField {
-                
-                // check fullname validation
-                if helper.isValid(name: firstNameTextField.text!) && helper.isValid(name: surNameTextField.text!) {
-                    nameContinueButton.isHidden = false
-                }
-                
-                // logic for Password TextField
-            } else if textField == passwordTextField {
-                
-                // check password validation
-                if passwordTextField.text!.count >= 6 {
-                    passwordContinueButton.isHidden = false
-                }
+            // check email validation
+            if helper.isValid(email: emailOrMobileTextField.text!) {
+                emailOrLabelButton.isHidden = false
             }
             
+            // logic for First Name or Last Name TextFields
+        } else if textField == firstNameTextField || textField == surNameTextField {
+            
+            // check fullname validation
+            if helper.isValid(name: firstNameTextField.text!) && helper.isValid(name: surNameTextField.text!) {
+                nameContinueButton.isHidden = false
+            }
+            
+            // logic for Password TextField
+        } else if textField == passwordTextField {
+            
+            // check password validation
+            if passwordTextField.text!.count >= 6 {
+                passwordContinueButton.isHidden = false
+            }
+        }
+        
         
         
         
@@ -201,10 +202,10 @@ class RegisterVC: UIViewController {
     
     var isButtonTextEmail = true
     @IBAction func emailAddressButtonTapped(_ sender: Any) {
-       setLabelTextForEmailView()
+        setLabelTextForEmailView()
     }
     
-
+    
     
     @IBAction func emailOrLabelButtonTapped(_ sender: Any) {
         let helper = Helper()
@@ -215,6 +216,7 @@ class RegisterVC: UIViewController {
         scrollView.setContentOffset(position, animated: true)
         
     }
+    
     //MARK: Password View - Outlets - Actions
     
     @IBOutlet weak var passwordContinueButton: UIButton!
@@ -230,49 +232,15 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var signupButton: UIButton!
     
     @IBAction func signupButtonTapped(_ sender: Any) {
-        // STEP 1. Declaring URL of the request; declaring the body to the URL; declaring request with the safest method - POST, that no one can grab our info.
-        let urlString = "http://\(localhost)/fb/register.php"
-        let url = URL(string: urlString)!
-        let body = "email=\(emailOrMobileTextField.text!.lowercased())&firstName=\(firstNameTextField.text!.lowercased())&lastName=\(surNameTextField.text!.lowercased())&password=\(passwordTextField.text!.lowercased())&birthday=\(bdayTextField.text!.lowercased())&gender=\(selectedGender)"
-        var request = URLRequest(url: url)
-        request.httpBody = body.data(using: .utf8)
-        request.httpMethod = "POST"
-        print(url)
-        // STEP 2. Execute created above request
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            
-            // access helper class
-            let helper = Helper()
-            
-            // error
-            if error != nil {
-                helper.showAlert(title: "Server Error", message: error!.localizedDescription, in: self)
-                return
-            }
-            
-            // fetch JSON if no error
-            do {
-                
-                // save mode of casting data
-                guard let data = data else {
-                    helper.showAlert(title: "Data Error", message: error!.localizedDescription, in: self)
-                    return
+        let registrationData = RegistrationRequiredInfo(email: emailOrMobileTextField.text!.lowercased(), firstName: firstNameTextField.text!.lowercased(), lastName: surNameTextField.text!.lowercased(), password: passwordTextField.text!.lowercased(), birthDay: bdayTextField.text!.lowercased(), gender: selectedGender)
+        accountsAPIInterator.getRegistrationStatus(with: registrationData) { (response) in
+            if response.statusCode == "200" {
+                DispatchQueue.main.async {
+                    let helper = Helper()
+                    helper.instantiateViewController(identifier: "TabBar", animated: true, by: self, completion: nil)
                 }
-                
-                // fetching all JSON received from the server
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
-                
-                print(json)
-                
-                // error while fetching JSON
-            } catch {
-                helper.showAlert(title: "JSON Error", message: error.localizedDescription, in: self)
             }
-            
-            
-            }.resume()
-
-        self.dismiss(animated: true, completion: nil)
+        }
     }
 }
 
