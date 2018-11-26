@@ -323,6 +323,7 @@
                     <connections>
                         <outlet property="coverImageView" destination="Pt7-vi-p9W" id="ftP-Kv-7oM"/>
                         <outlet property="userImageView" destination="Gak-oO-3Im" id="VY6-gN-wfA"/>
+                        <outlet property="userName" destination="fYm-ta-mJh" id="Den-TI-LFx"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YiE-Ns-cyR" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -245,7 +245,7 @@ class RegisterVC: UIViewController {
         
         
         if let date = dateFormatterGet.date(from: bdayTextField.text!) {
-            userBdayEntered = date.toString(dateFormat: "dd-MM-yyyy")
+            userBdayEntered = date.toString(dateFormat: "dd-MM-yy")
         } else {
             print("There was an error decoding the string")
         }

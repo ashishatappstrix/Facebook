@@ -8,9 +8,7 @@
 
 import UIKit
 
-// global var - to store all logged / registered user infromation
-var currentUser: NSMutableDictionary?
-
+let localhost = Helper.getDeviceIPAddress()
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -21,13 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // loading current user
-        currentUser = UserDefaults.standard.object(forKey: "currentUser") as? NSMutableDictionary
-        
-        print(currentUser)
+        Helper.bindCurrentUserToCustomerProfile()
         
         // checking is the glob variable that stores current user's info is empty or not
-        if currentUser?["id"] != nil {
-            
+        if CustomerProfile.shared.userID != "" {
             // accessing TabBar controller via Main.storyboard
             let TabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TabBar")
             

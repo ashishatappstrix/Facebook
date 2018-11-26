@@ -16,6 +16,9 @@ private init() {}
     public var userBirthday = String()
     public var userGender = String()
     public var userEmail = String()
+    public var userID = String()
+    public var userCoverImageURL = String()
+    public var userDisplayImageURL = String()
     
     public static var shared: CustomerProfile {
         get {

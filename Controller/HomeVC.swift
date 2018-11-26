@@ -10,14 +10,16 @@ import UIKit
 
 class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
+    let homeAPIInteractor = HomeAPIInteractor()
     // ui obj
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var userImageView: UIImageView!
+    @IBOutlet weak var userName: UILabel!
     
     // code obj (to build logic of distinguishing tapped / shown Cover / user)
     var isCoverImageTapped = false
     var isUserImageTapped = false
-    var imageViewTapped = ""
+    var imageViewTapped : ImageType = .Cover
     
     
     
@@ -27,9 +29,37 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
         
         // run funcs
         configure_userImageView()
+        loadUser()
+        downloadImage(path: CustomerProfile.shared.userCoverImageURL, showIn: coverImageView)
+        downloadImage(path: CustomerProfile.shared.userDisplayImageURL, showIn: userImageView)
+    }
+    
+    func loadUser() {
+        userName.text = "\(CustomerProfile.shared.userFirstName.capitalized) \(CustomerProfile.shared.userLastName.capitalized)"
     }
     
     
+    
+    func downloadImage(path: String, showIn imageView: UIImageView) {
+        
+        if !path.isEmpty {
+            DispatchQueue.main.async {
+                if let pathUrl = URL(string: path) {
+                    guard let data = try? Data(contentsOf: pathUrl) else {
+                        imageView.image = UIImage(named: "user.png")
+                        return
+                    }
+                    
+                    guard let image = UIImage(data: data) else {
+                        imageView.image = UIImage(named: "user.png")
+                        return
+                    }
+                    
+                    imageView.image = image
+                }
+            }
+        }
+    }
     // configuring the appearance of userImageView
     func configure_userImageView() {
         
@@ -63,7 +93,7 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     @IBAction func coverImageView_tapped(_ sender: Any) {
         
         // switching trigger
-        imageViewTapped = "cover"
+        imageViewTapped = .Cover
         
         // launch action sheet calling function
         showActionSheet()
@@ -74,7 +104,7 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     @IBAction func userImageView_tapped(_ sender: Any) {
         
         // switching trigger
-        imageViewTapped = "userImage"
+        imageViewTapped = .UserImage
         
         // launch action sheet calling function
         showActionSheet()
@@ -118,10 +148,10 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
         let delete = UIAlertAction(title: "Delete", style: .destructive) { (action) in
             
             // deleting profile picture (user), by returning placeholder
-            if self.imageViewTapped == "userImage" {
+            if self.imageViewTapped == .UserImage {
                 self.userImageView.image = UIImage(named: "user.png")
                 self.isUserImageTapped = false
-            } else if self.imageViewTapped == "cover" {
+            } else if self.imageViewTapped == .Cover {
                 self.coverImageView.image = UIImage(named: "HomeCover.jpg")
                 self.isCoverImageTapped = false
             }
@@ -130,9 +160,9 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
         
         
         // manipulating appearance of delete button for each scenarios
-        if imageViewTapped == "userImage" && isUserImageTapped == false {
+        if imageViewTapped == .UserImage && isUserImageTapped == false {
             delete.isEnabled = false
-        } else if imageViewTapped == "cover" && isCoverImageTapped == false {
+        } else if imageViewTapped == .Cover && isCoverImageTapped == false {
             delete.isEnabled = false
         }
         
@@ -156,7 +186,7 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
         let image = info[UIImagePickerControllerEditedImage] as? UIImage
         
         // based on the trigger we are assigning selected pictures to the appropriated imageView
-        if imageViewTapped == "cover" {
+        if imageViewTapped == .Cover {
             
             // assign selected image to CoverImageView
             self.coverImageView.image = image
@@ -164,7 +194,7 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
             // upload image to the server
             self.uploadImage(from: self.coverImageView)
             
-        } else if imageViewTapped == "userImage" {
+        } else if imageViewTapped == .UserImage {
             
             // assign selected image to AvaImageView
             self.userImageView.image = image
@@ -176,9 +206,9 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
         
         // completion handler, to communicate to the project that images has been selected (enable delete button)
         dismiss(animated: true) {
-            if self.imageViewTapped == "cover" {
+            if self.imageViewTapped == .Cover {
                 self.isCoverImageTapped = true
-            } else if self.imageViewTapped == "userImage" {
+            } else if self.imageViewTapped == .UserImage {
                 self.isUserImageTapped = true
             }
         }
@@ -189,28 +219,6 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     // sends request to the server to upload the Image (ava/cover)
     func uploadImage(from imageView: UIImageView) {
         
-        // save method of accessing ID of current user
-        guard let id = currentUser?["id"] else {
-            return
-        }
-        
-        // STEP 1. Declare URL, Request and Params
-        // url we gonna access (API)
-        let url = URL(string: "http://192.168.1.67/fb/uploadImage.php")!
-        
-        // declaring reqeust with further configs
-        var request = URLRequest(url: url)
-        
-        // POST - safest method of passing data to the server
-        request.httpMethod = "POST"
-        
-        // values to be sent to the server under keys (e.g. ID, TYPE)
-        let params = ["id": id, "type": imageViewTapped]
-        
-        // MIME Boundary, Header
-        let boundary = "Boundary-\(NSUUID().uuidString)"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
         // if in the imageView is placeholder - send no picture to the server
         // Compressing image and converting image to 'Data' type
         var imageData = Data()
@@ -219,53 +227,11 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
             imageData = UIImageJPEGRepresentation(imageView.image!, 0.5)!
         }
         
-        // assigning full body to the request to be sent to the server
-        request.httpBody = Helper().body(with: params, filename: "\(imageViewTapped).jpg", filePathKey: "file", imageDataKey: imageData, boundary: boundary) as Data
+        let uploadImageData = UploadImageRequiredInfo(userID: CustomerProfile.shared.userID, imgData: imageData, imgType: imageViewTapped)
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            DispatchQueue.main.async {
-                
-                // error occured
-                if error != nil {
-                    Helper().showAlert(title: "Server Error", message: error!.localizedDescription, in: self)
-                    return
-                }
-                
-                
-                do {
-                    
-                    // save mode of casting any data
-                    guard let data = data else {
-                        Helper().showAlert(title: "Data Error", message: error!.localizedDescription, in: self)
-                        return
-                    }
-                    
-                    // fetching JSON generated by the server - php file
-                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
-                    
-                    guard let parsedJSON = json else {
-                        return
-                    }
-                    
-                    if parsedJSON["status"] as! String == "200" {
-                        currentUser = parsedJSON.mutableCopy() as? NSMutableDictionary
-                        UserDefaults.standard.set(currentUser, forKey: "currentUser")
-                        UserDefaults.standard.synchronize()
-                    } else {
-                        if parsedJSON["message"] != nil {
-                            let message = parsedJSON["message"] as! String
-                            Helper().showAlert(title: "Error", message: message, in: self)
-                        }
-                    }
-                    
-                } catch {
-                    Helper().showAlert(title: "JSON Error", message: error.localizedDescription, in: self)
-                }
-                
-            }
-            }.resume()
-        
-        
+        homeAPIInteractor.uploadImage(with: uploadImageData) { (response) in
+            print(response)
+        }   
     }
     
     

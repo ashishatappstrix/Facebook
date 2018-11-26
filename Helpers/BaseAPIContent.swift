@@ -11,6 +11,7 @@ typealias Response = (_ response: Any, _ error: Error?) -> Void
 enum TriggerAPIFor {
     case login
     case register
+    case uploadImage
 }
 
 enum MethodType: String {
@@ -29,6 +30,12 @@ class APIRequestHandler {
         }
         if (APIfor == .register && (data as? RegistrationRequiredInfo != nil)) {
             guard let urlRequest = self.buildURLRequest(for: .register, with: data) else { return }
+            print (urlRequest)
+            self.triggerAPI(with: urlRequest, apiResponse: completion)
+        }
+        
+        if (APIfor == .uploadImage && (data as? UploadImageRequiredInfo != nil)) {
+            guard let urlRequest = self.buildURLRequest(for: .uploadImage, with: data) else { return }
             print (urlRequest)
             self.triggerAPI(with: urlRequest, apiResponse: completion)
         }
@@ -56,10 +63,13 @@ class APIRequestHandler {
  }
     
     func buildURLRequest(for API: TriggerAPIFor, with data: Any)->URLRequest? {
+        
+        guard let localhostAddress = localhost else { return nil }
+        
         switch API {
         case .login:
             guard let requestData  = data as? LoginRequiredInfo else { return nil }
-            let urlString = "http://\(localhost)/fb/login.php"
+            let urlString = "http://\(localhostAddress)/fb/login.php"
             let url = URL(string:urlString)!
             let body = "email=\(requestData.userName)&password=\(requestData.password)"
             var request = URLRequest(url: url)
@@ -69,12 +79,33 @@ class APIRequestHandler {
             
         case .register:
             guard let requestData  = data as? RegistrationRequiredInfo else { return nil }
-            let urlString = "http://\(localhost)/fb/register.php"
+            let urlString = "http://\(localhostAddress)/fb/register.php"
             let url = URL(string:urlString)!
             let body = "email=\(requestData.email)&firstName=\(requestData.firstName.trimmingCharacters(in: .whitespaces))&lastName=\(requestData.lastName.trimmingCharacters(in: .whitespaces))&password=\(requestData.password)&birthday=\(requestData.birthDay.trimmingCharacters(in: .whitespaces))&gender=\(requestData.gender)"
             var request = URLRequest(url: url)
             request.httpBody = body.data(using: .utf8)
             request.httpMethod = MethodType.POST.rawValue
+            
+            return request
+            
+        case .uploadImage:
+            guard let requestData  = data as? UploadImageRequiredInfo else { return nil }
+            
+            let url = URL(string: "http://\(localhostAddress)/fb/uploadImage.php")!
+            var request = URLRequest(url: url)
+            
+            // POST - safest method of passing data to the server
+            request.httpMethod = MethodType.POST.rawValue
+            
+            // values to be sent to the server under keys (e.g. ID, TYPE)
+            let params = ["id": CustomerProfile.shared.userID, "type": requestData.imgType.rawValue]
+            
+            // MIME Boundary, Header
+            let boundary = "Boundary-\(NSUUID().uuidString)"
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            
+            // assigning full body to the request to be sent to the server
+            request.httpBody = Helper().body(with: params, filename: "\(requestData.imgType.rawValue).jpg", filePathKey: "file", imageDataKey: requestData.imgData, boundary: boundary) as Data
             
             return request
         }

@@ -8,3 +8,6 @@
 
 import Foundation
 
+open class FBConstants {
+    open static let userDefaultsKey = "currentUser"
+}

@@ -9,7 +9,7 @@
 import UIKit
 
 class Helper {
-
+    
     // validate email address function / logic
     func isValid(email: String) -> Bool {
         
@@ -84,20 +84,10 @@ class Helper {
         return body
     }
     
-    func setCustomerProfile(with data: Dictionary<String, Any>) {
-        if let firstName = data["firstName"] as? String, let lastName = data["lastName"] as? String, let birthDay = data["birthday"] as? String, let gender =  data["gender"] as? String, let email = data["email"] as? String {
-            CustomerProfile.shared.userFirstName = firstName
-            CustomerProfile.shared.userLastName = lastName
-            CustomerProfile.shared.userBirthday = birthDay
-            CustomerProfile.shared.userGender = gender
-            CustomerProfile.shared.userEmail = email
-        }
-    }
-    
     /**
      This method is used to get Device IP Address
      */
-  func getDeviceIPAddress() -> String? {
+    class func getDeviceIPAddress() -> String? {
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
         if getifaddrs(&ifaddr) == 0 {
@@ -116,7 +106,43 @@ class Helper {
         }
         return address
     }
-
+    
+    class func bindCurrentUserToCustomerProfile() {
+        guard let currentUser = UserDefaults.standard.object(forKey: FBConstants.userDefaultsKey) as? Dictionary<String, Any> else {
+            return
+        }
+        
+        self.setCustomerProfile(with: currentUser)
+        
+    }
+    
+    class func setCustomerProfile(with data: Dictionary<String, Any>) {
+        if let userID = data["id"] as? String, let firstName = data["firstName"] as? String, let lastName = data["lastName"] as? String, let birthDay = data["birthday"] as? String, let gender =  data["gender"] as? String, let email = data["email"] as? String {
+            CustomerProfile.shared.userID = userID
+            CustomerProfile.shared.userFirstName = firstName
+            CustomerProfile.shared.userLastName = lastName
+            CustomerProfile.shared.userBirthday = birthDay
+            CustomerProfile.shared.userGender = gender
+            CustomerProfile.shared.userEmail = email
+        }
+        
+        if let coverImage = data["cover"] as? String {
+            CustomerProfile.shared.userCoverImageURL = coverImage
+        }
+        if let userDP = data["userImage"] as? String {
+            CustomerProfile.shared.userDisplayImageURL = userDP
+        }
+        
+        if let _ = UserDefaults.standard.object(forKey: FBConstants.userDefaultsKey) as? NSMutableDictionary {
+            UserDefaults.standard.removeObject(forKey: FBConstants.userDefaultsKey)
+            UserDefaults.standard.set(data, forKey: FBConstants.userDefaultsKey)
+            UserDefaults.standard.synchronize()
+            
+        } else {
+            UserDefaults.standard.set(data, forKey: FBConstants.userDefaultsKey)
+            UserDefaults.standard.synchronize()
+        }
+    }
 }
 
 extension Date
