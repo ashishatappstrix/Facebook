@@ -35,13 +35,15 @@ class BioVC: UIViewController {
     }
     
     @IBAction func saveTapped(_ sender: Any) {
-        let bioData = UpdateBioRequiredInfo(bioData: bioTextView.text)
-        homeAPIInteractor.updateBioData(with: bioData) {[weak self] (response) in
-            if response.statusCode == "200" {
-                if self?.delegate != nil {
-                    self?.delegate?.updateUserInfo()
+        if bioTextView.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty == false {
+            let bioData = UpdateBioRequiredInfo(bioData: bioTextView.text)
+            homeAPIInteractor.updateBioData(with: bioData) {[weak self] (response) in
+                if response.statusCode == "200" {
+                    if self?.delegate != nil {
+                        self?.delegate?.updateUserInfo()
+                    }
+                    self?.dismiss(animated: true, completion: nil)
                 }
-                self?.dismiss(animated: true, completion: nil)
             }
         }
     }

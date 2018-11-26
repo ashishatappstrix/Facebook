@@ -120,7 +120,12 @@ class APIRequestHandler {
             guard let requestData = data as? UpdateBioRequiredInfo else { return nil }
             let urlString = "http://\(localhostAddress)/fb/updateBio.php"
             let url = URL(string:urlString)!
-            let body = "id=\(CustomerProfile.shared.userID)&bio=\(requestData.bioData)"
+            var body = String()
+            if requestData.bioData.isEmpty{
+                body = "id=\(CustomerProfile.shared.userID)&bio=\"\""
+            } else {
+                body = "id=\(CustomerProfile.shared.userID)&bio=\(requestData.bioData)"
+            }
             var request = URLRequest(url: url)
             request.httpBody = body.data(using: .utf8)
             request.httpMethod = MethodType.POST.rawValue

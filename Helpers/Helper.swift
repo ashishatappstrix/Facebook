@@ -142,35 +142,42 @@ class Helper {
     }
     
     class func setCustomerProfile(with data: Dictionary<String, Any>) {
-        if let userID = data["id"] as? String {
+        var dataCopy = data
+        if let userID = dataCopy["id"] as? String {
             CustomerProfile.shared.userID = userID
         }
-        if let firstName = data["firstName"] as? String {
+        if let firstName = dataCopy["firstName"] as? String {
             CustomerProfile.shared.userFirstName = firstName
         }
-        if let lastName = data["lastName"] as? String {
+        if let lastName = dataCopy["lastName"] as? String {
             CustomerProfile.shared.userLastName = lastName
         }
-        if let birthDay = data["birthday"] as? String {
+        if let birthDay = dataCopy["birthday"] as? String {
             CustomerProfile.shared.userBirthday = birthDay
         }
-        if let gender =  data["gender"] as? String {
+        if let gender =  dataCopy["gender"] as? String {
             CustomerProfile.shared.userGender = gender
         }
-        if let email = data["email"] as? String {
+        if let email = dataCopy["email"] as? String {
             CustomerProfile.shared.userEmail = email
         }
-        if let coverImage = data["cover"] as? String {
+        if let coverImage = dataCopy["cover"] as? String {
             CustomerProfile.shared.userCoverImageURL = coverImage
         }
-        if let userDP = data["userImage"] as? String {
+        if let userDP = dataCopy["userImage"] as? String {
             CustomerProfile.shared.userDisplayImageURL = userDP
         }
-        if let userBio = data["bio"] as? String {
-            CustomerProfile.shared.userBio = userBio
+        if let userBio = dataCopy["bio"] as? String {
+            //TODO: Fix it
+            if userBio == "&quot;&quot;" {
+                CustomerProfile.shared.userBio = String()
+                dataCopy["bio"] = String()
+            } else {
+                CustomerProfile.shared.userBio = userBio
+            }
         }
         
-        self.saveCustomerProfileToDefaults(with: data)
+        self.saveCustomerProfileToDefaults(with: dataCopy)
        
     }
     

@@ -1,4 +1,4 @@
-//
+ //
 //  HomeVC.swift
 //  FaceBook
 //
@@ -41,10 +41,12 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     func loadUser() {
         
         userName.text = Helper().getUserFullname()
-        
-        if CustomerProfile.shared.userBio != "" {
+
+        if !CustomerProfile.shared.userBio.isEmpty {
             userBioLabel.text = CustomerProfile.shared.userBio
-        } 
+        } else {
+            self.editBioButton.setTitle("Add Temporary Bio", for: .normal)
+        }
     }
     
     // configuring the appearance of userImageView
@@ -99,10 +101,53 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     
     @IBAction func updateBio_tapped(_ sender: Any) {
   
-        guard let bioVC = self.storyboard?.instantiateViewController(withIdentifier: "BioVC") as? BioVC else { return }
-        let navController = UINavigationController(rootViewController: bioVC)
-        bioVC.delegate = self
-        self.present(navController, animated: true, completion: nil)
+        // declaring action sheet
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        // declaring New Bio button
+        let bio = UIAlertAction(title: "New Bio", style: .default) { (action) in
+            
+            // go to Bio Page
+            guard let bioVC = self.storyboard?.instantiateViewController(withIdentifier: "BioVC") as? BioVC else { return }
+            let navController = UINavigationController(rootViewController: bioVC)
+            bioVC.delegate = self
+            self.present(navController, animated: true, completion: nil)
+            
+        }
+        
+        // declaring cancel button
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        // adding buttons to the sheet
+        sheet.addAction(bio)
+        sheet.addAction(cancel)
+        // declaring delete button
+        if userBioLabel.text?.characters.count != 0 {
+            let delete = UIAlertAction(title: "Delete Bio", style: .destructive) {[weak self](action) in
+                
+                guard let `self` = self else {return}
+                
+                // send blank bio to the server
+                let bioData = UpdateBioRequiredInfo(bioData: String())
+                self.homeAPIInteractor.updateBioData(with: bioData) {[weak self] (response) in
+                    guard let `self` = self else {return}
+                    if response.statusCode == "200" {
+                        DispatchQueue.main.async {
+                            self.userBioLabel.text = CustomerProfile.shared.userBio
+                            self.editBioButton.setTitle("Add Temporary Bio", for: .normal)
+                        }
+                    }
+                }
+            }
+            sheet.addAction(delete)
+        }
+
+        
+        
+        
+        
+        // present action sheet to the user finally
+        self.present(sheet, animated: true, completion: nil)
     }
     
     
@@ -246,6 +291,7 @@ extension HomeVC : HomeVCDelegate {
     func updateUserInfo() {
         DispatchQueue.main.async {
             self.userBioLabel.text = CustomerProfile.shared.userBio
+            self.editBioButton.setTitleColor(UIColor.clear, for: .normal)
         }
     }
 }
