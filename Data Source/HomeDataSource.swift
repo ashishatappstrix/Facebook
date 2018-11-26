@@ -14,18 +14,38 @@ enum ImageType: String {
 }
 
 struct UploadImageRequiredInfo {
-    var userID: String
     var imgData : Data
     var imgType: ImageType
-    init(userID: String, imgData: Data, imgType: ImageType) {
-        self.userID = userID
+    init(imgData: Data, imgType: ImageType) {
         self.imgData = imgData
         self.imgType = imgType
         
     }
 }
 
+struct UpdateBioRequiredInfo {
+    var bioData: String
+    init(bioData: String) {
+        self.bioData = bioData
+    }
+}
+
 struct ImageUploadedResponse {
+    var message : String?
+    var statusCode : String?
+    init(data: Dictionary<String, Any>) {
+        if let statusCode = data["status"] as? String, let message = data["message"] as? String {
+            self.statusCode = statusCode
+            self.message = message
+            Helper.setCustomerProfile(with: data)
+        } else {
+            self.statusCode = "400"
+            self.message = "Invalid Data. Backend Error"
+        }
+    }
+}
+
+struct BioUploadedResponse {
     var message : String?
     var statusCode : String?
     init(data: Dictionary<String, Any>) {

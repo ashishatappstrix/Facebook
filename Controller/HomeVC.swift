@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol HomeVCDelegate {
+    func updateUserInfo()
+}
 class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     let homeAPIInteractor = HomeAPIInteractor()
@@ -15,6 +18,8 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var userName: UILabel!
+    @IBOutlet weak var userBioLabel: UILabel!
+    @IBOutlet weak var editBioButton: UIButton!
     
     // code obj (to build logic of distinguishing tapped / shown Cover / user)
     var isCoverImageTapped = false
@@ -26,40 +31,22 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     // first load func
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // run funcs
         configure_userImageView()
         loadUser()
-        downloadImage(path: CustomerProfile.shared.userCoverImageURL, showIn: coverImageView)
-        downloadImage(path: CustomerProfile.shared.userDisplayImageURL, showIn: userImageView)
+        Helper().downloadImage(path: CustomerProfile.shared.userCoverImageURL, showIn: coverImageView, orShow: "HomeCover.png")
+        Helper().downloadImage(path: CustomerProfile.shared.userDisplayImageURL, showIn: userImageView, orShow: "user.png")
     }
     
     func loadUser() {
-        userName.text = "\(CustomerProfile.shared.userFirstName.capitalized) \(CustomerProfile.shared.userLastName.capitalized)"
-    }
-    
-    
-    
-    func downloadImage(path: String, showIn imageView: UIImageView) {
         
-        if !path.isEmpty {
-            DispatchQueue.main.async {
-                if let pathUrl = URL(string: path) {
-                    guard let data = try? Data(contentsOf: pathUrl) else {
-                        imageView.image = UIImage(named: "user.png")
-                        return
-                    }
-                    
-                    guard let image = UIImage(data: data) else {
-                        imageView.image = UIImage(named: "user.png")
-                        return
-                    }
-                    
-                    imageView.image = image
-                }
-            }
-        }
+        userName.text = Helper().getUserFullname()
+        
+        if CustomerProfile.shared.userBio != "" {
+            userBioLabel.text = CustomerProfile.shared.userBio
+        } 
     }
+    
     // configuring the appearance of userImageView
     func configure_userImageView() {
         
@@ -108,6 +95,14 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
         
         // launch action sheet calling function
         showActionSheet()
+    }
+    
+    @IBAction func updateBio_tapped(_ sender: Any) {
+  
+        guard let bioVC = self.storyboard?.instantiateViewController(withIdentifier: "BioVC") as? BioVC else { return }
+        let navController = UINavigationController(rootViewController: bioVC)
+        bioVC.delegate = self
+        self.present(navController, animated: true, completion: nil)
     }
     
     
@@ -227,7 +222,7 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
             imageData = UIImageJPEGRepresentation(imageView.image!, 0.5)!
         }
         
-        let uploadImageData = UploadImageRequiredInfo(userID: CustomerProfile.shared.userID, imgData: imageData, imgType: imageViewTapped)
+        let uploadImageData = UploadImageRequiredInfo(imgData: imageData, imgType: imageViewTapped)
         
         homeAPIInteractor.uploadImage(with: uploadImageData) { (response) in
             print(response)
@@ -245,4 +240,12 @@ class HomeVC: UITableViewController, UINavigationControllerDelegate, UIImagePick
     }
     
     
+}
+
+extension HomeVC : HomeVCDelegate {
+    func updateUserInfo() {
+        DispatchQueue.main.async {
+            self.userBioLabel.text = CustomerProfile.shared.userBio
+        }
+    }
 }

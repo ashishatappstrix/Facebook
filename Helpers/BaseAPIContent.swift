@@ -12,6 +12,7 @@ enum TriggerAPIFor {
     case login
     case register
     case uploadImage
+    case updateBio
 }
 
 enum MethodType: String {
@@ -36,6 +37,12 @@ class APIRequestHandler {
         
         if (APIfor == .uploadImage && (data as? UploadImageRequiredInfo != nil)) {
             guard let urlRequest = self.buildURLRequest(for: .uploadImage, with: data) else { return }
+            print (urlRequest)
+            self.triggerAPI(with: urlRequest, apiResponse: completion)
+        }
+        
+        if (APIfor == .updateBio && (data as? UpdateBioRequiredInfo != nil)) {
+            guard let urlRequest = self.buildURLRequest(for: .updateBio, with: data) else { return }
             print (urlRequest)
             self.triggerAPI(with: urlRequest, apiResponse: completion)
         }
@@ -106,6 +113,17 @@ class APIRequestHandler {
             
             // assigning full body to the request to be sent to the server
             request.httpBody = Helper().body(with: params, filename: "\(requestData.imgType.rawValue).jpg", filePathKey: "file", imageDataKey: requestData.imgData, boundary: boundary) as Data
+            
+            return request
+            
+        case .updateBio:
+            guard let requestData = data as? UpdateBioRequiredInfo else { return nil }
+            let urlString = "http://\(localhostAddress)/fb/updateBio.php"
+            let url = URL(string:urlString)!
+            let body = "id=\(CustomerProfile.shared.userID)&bio=\(requestData.bioData)"
+            var request = URLRequest(url: url)
+            request.httpBody = body.data(using: .utf8)
+            request.httpMethod = MethodType.POST.rawValue
             
             return request
         }

@@ -84,6 +84,31 @@ class Helper {
         return body
     }
     
+    func downloadImage(path: String, showIn imageView: UIImageView, orShow imageName: String) {
+        
+        if !path.isEmpty {
+            DispatchQueue.main.async {
+                if let pathUrl = URL(string: path) {
+                    guard let data = try? Data(contentsOf: pathUrl) else {
+                        imageView.image = UIImage(named: imageName)
+                        return
+                    }
+                    
+                    guard let image = UIImage(data: data) else {
+                        imageView.image = UIImage(named: imageName)
+                        return
+                    }
+                    
+                    imageView.image = image
+                }
+            }
+        }
+    }
+    
+    func getUserFullname() -> String {
+        return "\(CustomerProfile.shared.userFirstName.capitalized) \(CustomerProfile.shared.userLastName.capitalized)"
+    }
+    
     /**
      This method is used to get Device IP Address
      */
@@ -117,22 +142,39 @@ class Helper {
     }
     
     class func setCustomerProfile(with data: Dictionary<String, Any>) {
-        if let userID = data["id"] as? String, let firstName = data["firstName"] as? String, let lastName = data["lastName"] as? String, let birthDay = data["birthday"] as? String, let gender =  data["gender"] as? String, let email = data["email"] as? String {
+        if let userID = data["id"] as? String {
             CustomerProfile.shared.userID = userID
+        }
+        if let firstName = data["firstName"] as? String {
             CustomerProfile.shared.userFirstName = firstName
+        }
+        if let lastName = data["lastName"] as? String {
             CustomerProfile.shared.userLastName = lastName
+        }
+        if let birthDay = data["birthday"] as? String {
             CustomerProfile.shared.userBirthday = birthDay
+        }
+        if let gender =  data["gender"] as? String {
             CustomerProfile.shared.userGender = gender
+        }
+        if let email = data["email"] as? String {
             CustomerProfile.shared.userEmail = email
         }
-        
         if let coverImage = data["cover"] as? String {
             CustomerProfile.shared.userCoverImageURL = coverImage
         }
         if let userDP = data["userImage"] as? String {
             CustomerProfile.shared.userDisplayImageURL = userDP
         }
+        if let userBio = data["bio"] as? String {
+            CustomerProfile.shared.userBio = userBio
+        }
         
+        self.saveCustomerProfileToDefaults(with: data)
+       
+    }
+    
+    static func saveCustomerProfileToDefaults(with data: Dictionary<String, Any>) {
         if let _ = UserDefaults.standard.object(forKey: FBConstants.userDefaultsKey) as? NSMutableDictionary {
             UserDefaults.standard.removeObject(forKey: FBConstants.userDefaultsKey)
             UserDefaults.standard.set(data, forKey: FBConstants.userDefaultsKey)

@@ -19,6 +19,7 @@ private init() {}
     public var userID = String()
     public var userCoverImageURL = String()
     public var userDisplayImageURL = String()
+    public var userBio = String()
     
     public static var shared: CustomerProfile {
         get {
